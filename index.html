@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Bingo Card Creator</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@400;500&family=Patrick+Hand&family=Comic+Neue:wght@400;700&display=swap" rel="stylesheet">
+
+<!-- libraries for export -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+</head>
+
+<body>
+
+<h1>Bingo Card Creator</h1>
+
+<button id="themeToggle" style="position:absolute; top:10px; right:10px; background:#5BC261; color:white; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">🌙</button>
+
+<div class="controls">
+
+    <h3>Bingo Caller</h3>
+
+<label>Card Title</label>
+<input type="text" id="cardTitle" placeholder="Enter title for each card">
+
+<button onclick="startCaller()">Start Caller</button>
+<button onclick="nextCall()">Next Item</button>
+
+<h2 id="callerDisplay">---</h2>
+
+<label>Enter words (one per line)</label>
+<textarea id="items"></textarea>
+
+<h3>Items List</h3>
+
+<ul id="itemList"></ul>
+
+<button onclick="loadItems()">Load Items</button>
+
+<label>Grid Size</label>
+<select id="gridSize">
+<option value="3">3 × 3</option>
+<option value="4">4 × 4</option>
+<option value="5">5 × 5</option>
+</select>
+
+<label>Card Theme</label>
+<select id="cardTheme">
+<option value="default">Default</option>
+<option value="green">Green</option>
+<option value="blue">Blue</option>
+<option value="yellow">Yellow</option>
+<option value="modern">Modern</option>
+<option value="worksheet">Worksheet</option>
+<option value="energetic">Energetic</option>
+</select>
+
+<label>Background Image (PNG)</label>
+<input type="file" id="bgImageInput" accept="image/png">
+<div id="bgUploadNotice" style="font-size:0.9em;color:#3EA94A;margin-top:4px;visibility:hidden;">image uploaded dear!</div>
+
+<button id="advancedToggle" style="margin-top:8px;">Advanced settings</button>
+<div id="advancedSettings" style="display:none; margin-top:8px;">
+    <label>Horizontal position (%)</label>
+    <input type="range" id="bgPosX" min="0" max="100" value="50">
+    <span id="bgPosXDisplay">50%</span><br>
+    <label>Vertical position (%)</label>
+    <input type="range" id="bgPosY" min="0" max="100" value="50">
+    <span id="bgPosYDisplay">50%</span>
+    
+    <!-- live preview box with guidelines -->
+    <div id="bgPreview" style="position:relative;overflow:hidden;">
+        <!-- guidelines overlay -->
+        <svg style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;">
+            <!-- center crosshair (red) -->
+            <line x1="50%" y1="0" x2="50%" y2="100%" stroke="#ff0000" stroke-width="1" opacity="0.5"/>
+            <line x1="0" y1="50%" x2="100%" y2="50%" stroke="#ff0000" stroke-width="1" opacity="0.5"/>
+            <!-- rule of thirds grid (green dashed) -->
+            <line x1="33.33%" y1="0" x2="33.33%" y2="100%" stroke="#00ff00" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+            <line x1="66.67%" y1="0" x2="66.67%" y2="100%" stroke="#00ff00" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+            <line x1="0" y1="33.33%" x2="100%" y2="33.33%" stroke="#00ff00" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+            <line x1="0" y1="66.67%" x2="100%" y2="66.67%" stroke="#00ff00" stroke-width="0.5" opacity="0.3" stroke-dasharray="2,2"/>
+        </svg>
+        <div id="previewTitle">OeN</div>
+        <div id="previewStar">★</div>
+    </div>
+    
+    <!-- move opacity and add zoom here -->
+    <label>Cell background opacity</label>
+    <input type="range" id="cellOpacity" min="0" max="1" step="0.05" value="1">
+    <span id="cellOpacityDisplay">100%</span>
+    
+    <label>Background zoom (%)</label>
+    <input type="range" id="bgZoom" min="50" max="200" step="5" value="100">
+    <span id="bgZoomDisplay">100%</span>
+    
+    <label for="fontColor">Font Color</label>
+    <input type="color" id="fontColor" value="#2F3A33">
+    
+    <label for="bgColor">Background Color</label>
+    <input type="color" id="bgColor" value="#ffffff">
+    
+    <label for="fontFamily">Font Family</label>
+    <select id="fontFamily">
+        <option value="Arial">Default (Arial)</option>
+        <option value="Poppins">Poppins – modern, clean, readable</option>
+        <option value="Patrick Hand">Patrick Hand – playful, handwritten style</option>
+        <option value="Trebuchet MS">Trebuchet MS – bold and professional</option>
+        <option value="Comic Neue">Comic Neue – fun but not too messy</option>
+        <option value="Georgia">Georgia – classic serif, elegant</option>
+    </select>
+</div>
+
+<label>
+<input type="checkbox" id="freeCenter">
+Free Center (5×5 only)
+</label>
+
+<label>
+<input type="checkbox" id="showStars" checked>
+Show stars in free spaces
+<input type="color" id="starColor" value="#ffffff" style="margin-left:10px; display:none;">
+</label>
+
+<label>Number of cards</label>
+<input type="number" id="cardCount" value="5" min="1" max="50">
+
+<button onclick="generateCards()">Generate Cards</button>
+
+<button onclick="printCards()">Print</button>
+<button onclick="downloadPNG()">Download PNG</button>
+<button onclick="downloadPDF()">Download PDF</button>
+
+</div>
+
+<hr>
+
+<div id="cardsContainer"></div>
+
+<footer style="text-align: center; margin-top: 40px; color: #666;">
+Made with ♥ Ifi
+</footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
