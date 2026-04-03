@@ -1,0 +1,321 @@
+body{
+font-family: Arial, Helvetica, sans-serif;
+padding:30px;
+background:#E8F7EC;
+color:#2F3A33;
+}
+
+/* Dark theme */
+body.dark-theme{
+background:#000;
+color:#fff;
+}
+body.dark-theme .controls{
+background:#333;
+border-color:#555;
+}
+body.dark-theme textarea,
+body.dark-theme select,
+body.dark-theme input{
+background:#444;
+color:#fff;
+border-color:#666;
+}
+body.dark-theme .card{
+background:#222;
+}
+body.dark-theme .cell{
+background: rgba(255,255,255, var(--cell-opacity, 0.1)); /* darker for dark theme */
+border-color:#666;
+}
+body.dark-theme footer{
+  color:#ccc;
+  background:#000;
+}
+
+footer{background:#fff; padding:10px; border-radius:6px; font-family:'Great Vibes', cursive; letter-spacing:2px;}
+
+/* highlight for dragging file onto background input */
+#bgImageInput.drag-over {
+  outline: 2px dashed #5BC261;
+  background: #e8f7ec;
+}
+
+/* advanced controls spacing */
+#advancedSettings label { display: block; margin-top: 4px; }
+#advancedSettings input { width: 100%; }
+
+/* color picker styling */
+#fontColor, #bgColor {
+    width: 60px;
+    height: 40px;
+    border: 2px solid #DDE5DD;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-left: 10px;
+    vertical-align: middle;
+}
+#advancedSettings label[for="fontColor"], #advancedSettings label[for="bgColor"] {
+    display: inline-block;
+    width: auto;
+    margin-right: 10px;
+}
+
+/* preview box styling – square 1:1 to match card */
+#bgPreview { 
+  width:200px; 
+  aspect-ratio:1/1; 
+  margin:10px auto; 
+  border:1px solid #ccc; 
+  background-repeat: no-repeat; 
+  /* background-size updated by JS to honor zoom */
+}
+
+#previewTitle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+  z-index: 1;
+  pointer-events: none;
+}
+
+
+/* Title */
+
+h1{
+text-align:center;
+color:#3EA94A;
+margin-bottom:30px;
+}
+
+/* Control Panel */
+
+.controls{
+background:white;
+padding:25px;
+border-radius:10px;
+max-width:500px;
+margin:auto;
+display:flex;
+flex-direction:column;
+gap:10px;
+border:1px solid #DDE5DD;
+box-shadow:0 4px 10px rgba(0,0,0,0.05);
+}
+
+/* Inputs */
+
+textarea,
+select,
+input{
+padding:8px;
+border-radius:6px;
+border:1px solid #DDE5DD;
+font-size:14px;
+}
+
+/* Buttons */
+
+button{
+padding:10px;
+border:none;
+border-radius:6px;
+background:#5BC261;
+color:white;
+font-weight:bold;
+cursor:pointer;
+transition:0.2s;
+}
+
+button:hover{
+background:#3EA94A;
+}
+
+/* Card Container */
+
+#cardsContainer{
+margin-top:40px;
+display:flex;
+flex-wrap:wrap;
+gap:25px;
+justify-content:center;
+}
+
+/* Bingo Card */
+
+.card{
+padding:12px;
+border-radius:10px;
+box-shadow:0 3px 8px rgba(0,0,0,0.08);
+}
+
+/* Grid */
+
+.grid{
+  display: grid;
+  gap: 6px;
+  /* keep this */
+}
+
+/* support for user-uploaded card background */
+.card.has-bg{
+  position: relative;
+  overflow: hidden;
+}
+.card.has-bg::before{
+  content: "";
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  /* semi-transparent white overlay to keep text legible */
+  background: rgba(255,255,255,0.4);
+  z-index: 0;
+}
+.card.has-bg > .grid{
+  position: relative;
+  z-index: 1;
+}
+
+/* cell */
+
+.cell{
+  border:1px solid #DDE5DD;
+  padding:0; /* remove vertical padding */
+  text-align:center;
+  font-weight:bold;
+  background: rgba(255,255,255, var(--cell-opacity, 1));
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  aspect-ratio: 1 / 1; /* this makes each cell a perfect square */
+  font-size:16px; /* adjust text size */
+  border-radius:6px;
+}
+
+/* Free space */
+
+.free{
+color:white;
+}
+
+/* Free space backgrounds per theme */
+.card-default .free{
+background:#5BC261;
+}
+
+.card-green .free{
+background:#3EA94A;
+}
+
+.card-blue .free{
+background:#4A90E2;
+}
+
+.card-yellow .free{
+background:#F5C242;
+}
+
+/* Card title styling */
+.card-title{
+  text-align:center;
+  font-weight:bold;
+  margin-bottom:8px;
+  font-size:18px;
+}
+
+/* Drag Items */
+
+#itemList{
+list-style:none;
+padding:0;
+}
+
+.draggable{
+padding:8px;
+margin:4px 0;
+background:#E8F7EC;
+border-radius:5px;
+cursor:grab;
+}
+
+#callerDisplay{
+font-size:40px;
+text-align:center;
+color:#3EA94A;
+margin-top:10px;
+font-weight:bold;
+}
+
+/* customized card */
+
+/* Default theme (already exists) */
+.card-default{
+  border:2px solid #5BC261;
+  background:white;
+  color:#2F3A33;
+}
+
+/* Theme 1: Green gradient */
+.card-green{
+  border:2px solid #3EA94A;
+  background: linear-gradient(145deg, #DFF5E1, #5BC261);
+  color:#2F3A33;
+}
+
+/* Theme 2: Soft pastel blue */
+.card-blue{
+  border:2px solid #4A90E2;
+  background: linear-gradient(145deg, #E1F0FF, #4A90E2);
+  color:#2F3A33;
+}
+
+/* Theme 3: Yellow accent */
+.card-yellow{
+  border:2px solid #F5C242;
+  background: linear-gradient(145deg, #FFF9E1, #F5C242);
+  color:#2F3A33;
+}
+
+/* Theme Modern (minimal, professional) */
+.card-modern {
+  font-family: Inter, Helvetica, Roboto, sans-serif;
+  border:1px solid #ccc;
+  border-radius:6px;
+  background:white;
+  color:#2F3A33;
+}
+.card-modern .cell { border:1px solid #eee; }
+.card-modern .free { background:#C7EED1; color:#2F3A33; }
+
+/* Theme Worksheet (handwritten, playful) */
+.card-worksheet {
+  font-family: 'Patrick Hand', 'Comic Sans MS', cursive;
+  border:2px solid #000;
+  border-radius:0;
+  background: repeating-linear-gradient(0deg, #fff, #fff 24px, #f9f9f9 25px);
+  color:#2F3A33;
+}
+.card-worksheet .cell { border:1px solid #ccc; }
+.card-worksheet .free { background:#FFD966; color:#2F3A33; }
+
+/* Theme Energetic (bold, game-like) */
+.card-energetic {
+  font-family: 'Trebuchet MS', Verdana, sans-serif;
+  border:3px solid #FF8C42;
+  border-radius:12px;
+  background: radial-gradient(circle, #ffe8e0 0%, #ff8c42 100%);
+  color:#000;
+}
+.card-energetic .cell { border:2px solid #FF8C42; }
+.card-energetic .free { background:#FF8C42; color:#fff; }
+
+/* Print styles */
+@media print {
+  body { background: white; }
+  .controls { display: none; }
+  #cardsContainer { display: block; justify-content: center; align-items: center; min-height: 100vh; }
+  .card { page-break-inside: avoid; margin: 20px auto; }
+}
